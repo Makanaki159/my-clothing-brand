@@ -168,20 +168,36 @@
     </div>
   </footer>
   <script>
-    const cart = [];
+    // Load existing cart from localStorage or start fresh
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+  
     const cartCountElement = document.querySelector('.cart-count');
+    
     const updateCartCount = () => {
-      cartCountElement.textContent = cart.length;
+      if (cartCountElement) {
+        cartCountElement.textContent = `(${cart.length})`;
+      }
     };
-
+    // Set initial count on page load
+    updateCartCount();
+  
     document.querySelectorAll('.product-card button').forEach(button => {
       button.addEventListener('click', () => {
         const productCard = button.parentElement;
         const productName = productCard.querySelector('h3').textContent;
         const productPrice = productCard.querySelector('p').textContent;
-        cart.push({ name: productName, price: productPrice });
-        
+        const productImage = productCard.querySelector('img').src;
+
+  
+        // Add product to cart array
+        cart.push({ name: productName, price: productPrice, image: productImage});
+  
+        // Save updated cart to localStorage
+        localStorage.setItem('cart', JSON.stringify(cart));
+  
+        // Update count in UI
         updateCartCount();
+  
         alert(`${productName} has been added to your cart.`);
       });
     });
